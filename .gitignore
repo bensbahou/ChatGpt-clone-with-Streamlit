@@ -1,0 +1,5 @@
+# ignore myenv folder
+myenv/
+
+# ignore .env file
+.env
