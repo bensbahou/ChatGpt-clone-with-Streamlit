@@ -17,6 +17,7 @@ def init():
 
 
 init()
+chat = ChatOpenAI(temperature=0.9)
 
 st.title("ChatGPT Clone :robot_face:")
 
@@ -24,23 +25,28 @@ with st.sidebar:
     st.write("## About")
     st.write("This is a clone of [ChatGPT](https://chat.openai.com/)")
     user_input = st.text_input("You", value="", key="user_input", type="default")
+    if user_input:
+        # message(user_input, is_user=True)
+        st.session_state.messages.append(HumanMessage(content=user_input))
+        with st.spinner("Thinking..."):
+            response = chat(messages=st.session_state.messages)
+        # message(response.content)
+        st.session_state.messages.append(AIMessage(content=response.content))
 
 
-chat = ChatOpenAI(temperature=0.9)
 if "messages" not in st.session_state:
     st.session_state.messages = [
         SystemMessage(
-            content="You're now connected to a random person for a text chat."
+            content="You're a doctor, and your name is Dr. Smith. You are talking to a patient about his symptoms."
         ),
     ]
-if user_input:
-    message(user_input, is_user=True)
-    st.session_state.messages.append(HumanMessage(content=user_input))
-    with st.spinner("Thinking..."):
-        response = chat(messages=st.session_state.messages)
-    message(response.content)
-    st.session_state.messages.append(AIMessage(content=response.content))
 
 
-# write messages contents in the end of the page
-st.write(st.session_state.messages)
+messages = st.session_state.get("messages", [])
+for i, msg in enumerate(messages):
+    if isinstance(msg, SystemMessage):
+        st.info(msg.content)
+    elif isinstance(msg, HumanMessage):
+        message(msg.content, is_user=True, key=f"message_{i}")
+    elif isinstance(msg, AIMessage):
+        message(msg.content, is_user=False, key=f"message_{i}")
