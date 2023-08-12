@@ -25,13 +25,7 @@ with st.sidebar:
     st.write("## About")
     st.write("This is a clone of [ChatGPT](https://chat.openai.com/)")
 user_input = st.text_input("You", value="", key="user_input", type="default")
-if user_input:
-    # message(user_input, is_user=True)
-    st.session_state.messages.append(HumanMessage(content=user_input))
-    with st.spinner("Thinking..."):
-        response = chat(messages=st.session_state.messages)
-    # message(response.content)
-    st.session_state.messages.append(AIMessage(content=response.content))
+
 
 
 if "messages" not in st.session_state:
@@ -50,3 +44,11 @@ for i, msg in enumerate(messages):
         message(msg.content, is_user=True, key=f"message_{i}")
     elif isinstance(msg, AIMessage):
         message(msg.content, is_user=False, key=f"message_{i}")
+
+if user_input:
+    # message(user_input, is_user=True)
+    st.session_state.messages.append(HumanMessage(content=user_input))
+    with st.spinner("Thinking..."):
+        response = chat(messages=st.session_state.messages)
+    # message(response.content)
+    st.session_state.messages.append(AIMessage(content=response.content))
