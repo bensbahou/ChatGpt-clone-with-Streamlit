@@ -24,7 +24,7 @@ st.title("ChatGPT Clone :robot_face:")
 with st.sidebar:
     st.write("## About")
     st.write("This is a clone of [ChatGPT](https://chat.openai.com/)")
-user_input = st.text_input("You", value="", key="user_input", type="default")
+
 
 
 
@@ -45,6 +45,7 @@ for i, msg in enumerate(messages):
     elif isinstance(msg, AIMessage):
         message(msg.content, is_user=False, key=f"message_{i}")
 
+user_input = st.text_input("You", value="", key="user_input", type="default")
 if user_input:
     # message(user_input, is_user=True)
     st.session_state.messages.append(HumanMessage(content=user_input))
